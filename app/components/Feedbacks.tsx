@@ -1,4 +1,3 @@
-// Feedbacks.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -8,7 +7,7 @@ interface Feedback {
   userId: string;
   category: string;
   comments: string;
-  userEmail?: string; // Email field assumed to be included from the backend
+  userEmail?: string;
 }
 
 const Feedbacks = () => {

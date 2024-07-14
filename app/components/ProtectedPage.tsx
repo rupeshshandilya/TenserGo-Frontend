@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
 import FeedbackForm from './FeedbackForm';
-import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
 
 interface User {
