@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import FeedbackForm from './FeedbackForm';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface User {
   email?: string;
@@ -23,9 +22,7 @@ const ProtectedPage = () => {
     return (
       <>
         <p>Welcome, {user.email}</p>
-        <FeedbackForm userId={user.id}/>
         <button onClick={() => {
-          router.refresh();
           localStorage.removeItem('user');
           setUser(null);
         }}>Sign out</button>

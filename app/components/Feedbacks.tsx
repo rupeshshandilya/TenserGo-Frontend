@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import FeedbackForm from "./FeedbackForm";
 
 interface Feedback {
   id: string;
@@ -41,10 +42,15 @@ const Feedbacks = () => {
     axios.delete(`http://localhost:4000/feedback/delete/${userId}/${encodeURIComponent(category)}`)
       .then(() => {
         alert("Feedback deleted successfully!");
+        setFeedbacks(feedbacks.filter(fb => fb.userId !== userId || fb.category !== category));
       })
       .catch(error => {
         console.error("Failed to delete feedback:", error);
       });
+  };
+
+  const handleFeedbackSubmit = (feedback: Feedback) => {
+    setFeedbacks([feedback, ...feedbacks]);
   };
 
   return (
@@ -52,6 +58,11 @@ const Feedbacks = () => {
       <h1 className="text-xl font-semibold text-gray-800 mb-6">
         User Feedbacks
       </h1>
+      {user ? (
+        <FeedbackForm userId={user.id} onFeedbackSubmit={handleFeedbackSubmit} />
+      ) : (
+        <p>Please sign in to submit feedback.</p>
+      )}
       <ul className="divide-y divide-gray-200">
         {feedbacks.map((feedback) => (
           <li key={feedback.id} className="py-4">
@@ -68,7 +79,6 @@ const Feedbacks = () => {
               {user && user.id === feedback.userId && (
                 <div className="flex items-center space-x-2">
                   <button
-                    // onClick={() => handleEdit(feedback.userId, feedback.category, feedback.comments)}
                     className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                   >
                     Edit

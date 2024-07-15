@@ -1,22 +1,14 @@
 "use client";
-import { useState, FormEvent } from "react";
 import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 interface FeedbackFormProps {
   userId?: string;
+  onFeedbackSubmit?: (feedback: any) => void; 
 }
 
-interface Feedback {
-  id?: string;
-  userId?: string;
-  category: string;
-  comments: string;
-  userEmail?: string;
-}
-
-const FeedbackForm: React.FC<FeedbackFormProps> = ({ userId }) => {
+const FeedbackForm: React.FC<FeedbackFormProps> = ({ userId, onFeedbackSubmit }) => {
 
   const {
     register,
@@ -28,23 +20,25 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ userId }) => {
       category: "Product Features",
       comments: ""
     }
-  })
+  });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-
     const formData = {
       ...data,
       userId: userId
-    }
-    await axios.post("api/feedback", formData)
+    };
+    await axios.post("/api/feedback", formData)
     .then((response) => {
       toast.success("Feedback submitted successfully!");
       reset({
         comments: ""
-      })
-    }) .catch((error) => {
+      });
+      if (onFeedbackSubmit) {
+        onFeedbackSubmit(response.data);  
+      }
+    }).catch((error) => {
       toast.error("Failed to submit feedback");
-    })
+    });
   };
 
   return (
@@ -64,7 +58,6 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ userId }) => {
                 className="form-select w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 {...register("category")}
               >
-                {/* <option value="">Select a category</option> */}
                 <option value="Product Features">Product Features</option>
                 <option value="Product Pricing">Product Pricing</option>
                 <option value="Product Usability">Product Usability</option>
@@ -75,8 +68,6 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ userId }) => {
               <textarea
                 id="comments"
                 rows={3}
-                // value={comments}
-                // onChange={(e) => setComments(e.target.value)}
                 placeholder="Write a few sentences about yourself."
                 required
                 {...register("comments")}
@@ -85,7 +76,6 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ userId }) => {
             </div>
           </div>
 
-          {/* <!-- Buttons --> */}
           <div className="flex justify-end space-x-4 mt-4">
             <button
               type="submit"
