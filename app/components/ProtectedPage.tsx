@@ -25,6 +25,7 @@ const ProtectedPage = () => {
         <button onClick={() => {
           localStorage.removeItem('user');
           setUser(null);
+          window.location.reload();
         }}>Sign out</button>
       </>
     );
