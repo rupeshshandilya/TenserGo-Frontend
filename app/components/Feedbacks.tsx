@@ -49,8 +49,12 @@ const Feedbacks = () => {
       });
   };
 
-  const handleFeedbackSubmit = (feedback: Feedback) => {
-    setFeedbacks([feedback, ...feedbacks]);
+  const handleFeedbackSubmit = async (feedback: Feedback) => {
+    try {
+      await fetchFeedbacks();
+    } catch (error) {
+      console.error("Failed to update feedback list after submission:", error);
+    }
   };
 
   return (
